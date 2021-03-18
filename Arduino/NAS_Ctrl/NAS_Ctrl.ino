@@ -22,6 +22,9 @@ int FunSpeed = 0;
 const int TempK = -225;
 const int TempB = 622;
 
+//硬盘上电时间间隔
+const int Ds = 6000;
+
 void setup()
 {
   //设置pinMode
@@ -42,8 +45,8 @@ void setup()
   //初始化
   SetInit();
 
-  //延迟10秒自动启动
-  delay(10000);
+  //延迟15秒自动启动
+  delay(15000);
   SetPcON();
 }
 
@@ -104,8 +107,10 @@ void SetInit()
 
   //给磁盘开关高电平，高电平控制MOS管关闭
   digitalWrite(Disk1Pin, HIGH);
-  digitalWrite(Disk1Pin, HIGH);
-  digitalWrite(Disk1Pin, HIGH);
+  delay(500);
+  digitalWrite(Disk2Pin, HIGH);
+  delay(500);
+  digitalWrite(Disk3Pin, HIGH);
 }
 
 //开机程序
@@ -119,17 +124,21 @@ void SetPcON()
 
   //点亮LED灯
   digitalWrite(PwLedPin, HIGH);
-  //开启风扇，设置转速为大概一半;
+
+  //开启风扇，测试全速状态
+  SetFunPwm(255);
+  delay(5000);
+  //开启风扇，设置转速为大概一半
   SetFunPwm(125);
-  delay(2000);
+  delay(3000);
 
   //硬盘分批上电
   digitalWrite(Disk1Pin, LOW);
-  delay(5000);
+  delay(Ds);
   digitalWrite(Disk2Pin, LOW);
-  delay(6000);
+  delay(Ds);
   digitalWrite(Disk3Pin, LOW);
-  delay(6000);
+  delay(Ds);
 
   //给主板开机
   digitalWrite(PCPwONPin, HIGH);
@@ -185,7 +194,7 @@ boolean CheckPwOff()
       //0.5s后再次检查是否有输出
       if (CheckPwIsON())
       {
-        //有输出，直接返回true
+        //有输出，直接返回false，表示是开机状态
         return false;
       }
       else
