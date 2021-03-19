@@ -105,6 +105,9 @@ void SetInit()
   // 关闭风扇
   SetFunPwm(0);
 
+  //关闭电源
+  ResetPw();
+
   //给磁盘开关高电平，高电平控制MOS管关闭
   digitalWrite(Disk1Pin, HIGH);
   delay(500);
