@@ -19,8 +19,8 @@ int IsOn = 0;
 int FunSpeed = 0;
 
 //风扇调速曲线
-const int TempK = -225;
-const int TempB = 622;
+const int TempMin = 0;
+const int TempMax = 40;
 
 //硬盘上电时间间隔
 const int Ds = 6000;
@@ -135,7 +135,7 @@ void SetPcON()
   SetFunPwm(100);
   delay(3000);
 
-    //给主板开机
+  //给主板开机
   digitalWrite(PCPwONPin, HIGH);
   delay(500);
   digitalWrite(PCPwONPin, LOW);
@@ -235,7 +235,7 @@ void SetFunPwm(int val)
   }
   else
   {
-    if (abs(FunSpeed - val) > 5)
+    if (abs(FunSpeed - val) > 3)
     {
       FunSpeed = val;
       analogWrite(FunPwnPin, val);
@@ -243,15 +243,18 @@ void SetFunPwm(int val)
   }
 }
 
-//读取温度
+//读取温度，获得pwm值
 //NTC B3950 10K 串联 8.06K电阻，测量热敏电阻两侧电压
 int ReadTemp()
 {
-  int tempV = analogRead(TempPin);
-  int k = TempK + int(analogRead(TempR1Pin)) * 50;
-  int b = TempB + int(analogRead(TempR1Pin)) * 200;
+  int v = analogRead(TempPin);
+  int Tmin = TempMin + int(analogRead(TempR1Pin)) * 7;
+  int Tmax = TempMax + int(analogRead(TempR2Pin)) * 8;
 
-  int p = k * tempV + b;
+  int k = int(255 / abs(Tmax - Tmin));
+  int t = int(68 - (35 * v) / (5 - v));
+
+  int p = int(k * (t - Tmin));
 
   if (p > 255)
   {
