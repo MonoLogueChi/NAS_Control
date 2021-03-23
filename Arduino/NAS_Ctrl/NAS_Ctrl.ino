@@ -132,8 +132,13 @@ void SetPcON()
   SetFunPwm(255);
   delay(5000);
   //开启风扇，设置转速为大概一半
-  SetFunPwm(125);
+  SetFunPwm(100);
   delay(3000);
+
+    //给主板开机
+  digitalWrite(PCPwONPin, HIGH);
+  delay(500);
+  digitalWrite(PCPwONPin, LOW);
 
   //硬盘分批上电
   digitalWrite(Disk1Pin, LOW);
@@ -142,11 +147,6 @@ void SetPcON()
   delay(Ds);
   digitalWrite(Disk3Pin, LOW);
   delay(Ds);
-
-  //给主板开机
-  digitalWrite(PCPwONPin, HIGH);
-  delay(500);
-  digitalWrite(PCPwONPin, LOW);
 
   //关闭电源开关，并将状态设置为开机
   delay(5000);
