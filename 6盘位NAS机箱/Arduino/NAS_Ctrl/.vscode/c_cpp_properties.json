@@ -26,7 +26,6 @@
             "name": "Arduino",
             "compilerPath": "C:\\Users\\MonoLogueChi\\scoop\\apps\\arduino\\current\\hardware\\tools\\avr\\bin\\avr-g++",
             "compilerArgs": [
-                "-w",
                 "-std=gnu++11",
                 "-fpermissive",
                 "-fno-exceptions",
